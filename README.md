@@ -1,2 +1,2 @@
 # Python
-Python Exercises and/or Code Challenges
+Python repository. Here can be stored random exercises, chanllenge codes and other content.
