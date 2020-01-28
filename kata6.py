@@ -109,13 +109,18 @@ def tickets(people):
         if bill == 25:
           deposit += bill
         else:
-          change = bill - 25
-          if change > deposit:
-            return "NO"
-      else:
+          deposit -= (bill -25)
+      if deposit >= 0:
         return "YES"
+      else:
+        return "NO"
 
+# tickets = lambda people: "NO" for bill in people if bill > 25 and (if (change = bill -25) > deposit) else "YES" else deposit += bill
 
 print(tickets([25, 25, 50]))
 print(tickets([25, 100]))
 print(tickets([25, 25, 50, 50, 100]))
+print(tickets([25, 25, 50, 50, 25, 25, 25, 100, 25, 50]))
+
+# This exercise also has some issues as those were reported by other programmers
+# already.
