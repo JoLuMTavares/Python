@@ -104,9 +104,6 @@ Example: n = 86240 should return "(2**5)(5)(7**2)(11)"
 
 """
 
-# def isPrime(n):
-#     return n == 2 or n%2 and all(n%x for x in range(3,int(n**.5)+1,2))
-
 # Auxiliary function to check if a number is prime
 isPrime = lambda n: n == 2 or n%2 and all(n%x for x in range(3,int(n**.5)+1,2))
 
@@ -163,10 +160,59 @@ def primeFactors(n):
   return "Empty. No sequence!"
 
 
+# New version
+def primeFactors_v2(n):
+  # The string representing the sequence
+  res = ""
+  # The final number to compare to the given n
+  fN = 1 
+  # First checking if the number is greater than 1
+  if n > 1:
+    
+    # Performing the iteration. This will be until the multiplication of all the elements stored in the equals the given number    
+    for e in range(2, n):
+
+      # Checking if it is a prime number
+      if isPrime(e):
+        # Confirming if the given number is divisible by the prime one
+        if n % e == 0:
+          p = 2
+          
+          # A cycle is performed until the given number is not divisible
+          # by a specific power of the prime number
+          while n % (e**p) == 0:
+            p += 1
+          else:
+            # Multiplication of the main result by what is stored
+            t = p-1
+            fN *= e**(p-1)
+            if t == 1:
+              res += "(" + str(e) + ")"
+            else:
+              # Adding the complete string with the right power 
+              res += "(" + str(e) + "**" + str(p-1) + ")"
+            # break # Breaking the cycle
+
+      # If it matches the given number, we are done with cycles
+      if fN == n:
+        break
+    if res != "":
+      return res
+
+  # In case nothing was done or we didn't get any possible sequence
+  return "Empty. No sequence!"
+
 # print(primeFactors(121))
 print(primeFactors(86240))
 print(primeFactors(7775460)) # Correct. -> "(2**2)(3**3)(5)(7)(11**2)(17)"
 
+print(primeFactors_v2(86240))
+print(primeFactors_v2(7775460))
+print(primeFactors_v2(27775460))
+print(primeFactors_v2(18775465))
+print(primeFactors_v2(208775469))
+print(primeFactors_v2(198243782358748))
+# print(primeFactors_v2(19824378235874820398457))
 # The result is not entirely surprising. It works here.
 # Not in code wars, since their servers are programmed not to go beyond 12 seconds
 # of execution. This means, what I did is not efficient. I'll have to find
