@@ -23,12 +23,76 @@ More examples:
 
 """ 
 # 511 --> 4 # 1 - 2 + 34 + 567 - 89
-# 512 --> 4 # 1 + 2 + 34 + 567 - 89
+# 515 --> 4 # 1 + 2 + 34 + 567 - 89
 # 524 --> 3 # 12 + 34 + 567 - 89
 
 # 711 --> 3 # 12 - 34 - 56 + 789
 # 744 --> - #  no solution possible
 # 770 --> 4 # 1 + 2 + 34 - 56 + 789
+# 1073 --> 3  # 1234 - 5 - 67 - 89
+# 1082 --> 3  # 1234 - 56 - 7 - 89
+# 1083 --> 3  # 1234 + 5 - 67 - 89
+# 1091 --> 3  # 1234 - 56 - 78 - 9
+# 1096 --> 3  # 1234 - 56 + 7 - 89
+# 1101 --> 3  # 1234 - 56 - 78 + 9
+
+from itertools import product#, islice
+ 
+# Auxiliary function that returns a complete string having all the digits
+# Between each there can be an operator sign or not. 
+def expr(p):
+  return "1{}2{}3{}4{}5{}6{}7{}8{}9".format(*p)
+ 
+# Auxiliary function that returns all the calculated expressions for each position
+# between the 9 digits
+def gen_expr():
+  op = ['+', '-', '']
+  return [expr(p) for p in product(op, repeat=9) if p[0] != '+']
+
+
+# def all_exprs():
+#   values = {}
+#   for expr in gen_expr():
+#       val = eval(expr)
+#       if val not in values:
+#           values[val] = 1
+#       else:
+#           values[val] += 1
+#   return valuesf
+
+# def sum_to(val):
+#   for s in filter(lambda x: x[0] == val, map(lambda x: (eval(x), x), gen_expr())):
+#       print(s)
+
+# print(u"\u00B1")
+
+# Auxiliary function that counts the number of operators inside the given string
+def count_sign(e):
+  count = 0
+  for c in e:
+    if ord(c) == 43 or ord(c) == 45:
+      count += 1
+  return count
+
+count_oper = lambda e: sum(c  for c in str(e) if ord(c) == 43 or ord(c) == 45)
+
 
 def operator_insertor(n):
-  
+  # A list created with all the possible expressions that give result on the given
+  # number
+  l = list(filter(lambda x: x[0] == n, map(lambda x: (eval(x), x), gen_expr()))) 
+
+  # Returning the count of the expression with the least operators inserted (when the list is not empty)
+  return count_sign(l[len(l)-1][1]) if len(l) > 0 else None
+
+print(operator_insertor(11))
+print(operator_insertor(100))
+print(operator_insertor(102))
+print(operator_insertor(160))
+print(operator_insertor(511))
+print(operator_insertor(512))
+print(operator_insertor(766))
+print(operator_insertor(789))
+print(operator_insertor(1091))
+
+
