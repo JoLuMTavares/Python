@@ -42,6 +42,7 @@ from itertools import product#, islice
 # Between each there can be an operator sign or not. 
 def expr(p):
   return "1{}2{}3{}4{}5{}6{}7{}8{}9".format(*p)
+
  
 # Auxiliary function that returns all the calculated expressions for each position
 # between the 9 digits
@@ -76,6 +77,14 @@ def count_sign(e):
 
 count_oper = lambda e: sum(c  for c in str(e) if ord(c) == 43 or ord(c) == 45)
 
+# This function gives the first right digit sequence before the final one
+def make_expre(n):
+  digits = "123456789"
+  s_expr = str(n)
+  if len(s_expr) > 1:
+    first_expr = s_expr[0] + "".join(digits[digits.index(s_expr[0])+i] for i in range(1, len(s_expr)))
+    return first_expr
+  return None
 
 def operator_insertor(n):
   # A list created with all the possible expressions that give result on the given
@@ -84,6 +93,12 @@ def operator_insertor(n):
 
   # Returning the count of the expression with the least operators inserted (when the list is not empty)
   return count_sign(l[len(l)-1][1]) if len(l) > 0 else None
+
+print(make_expre(140))
+print(make_expre(527))
+print(make_expre(89))
+print(make_expre(13))
+print(make_expre(747))
 
 print(operator_insertor(11))
 print(operator_insertor(100))
