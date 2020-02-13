@@ -75,9 +75,8 @@ function findSubstring(s, words) {
   // Number of a characters of a word in array "words".
   var word_length = words[0].length;
 
-  // HashMap to store the words present in "words" array
-  // against it's occurrences inside the same array
-  hashMap = new HashMap();
+  // Criation of a dictionary object to store the each word and its frequency
+  firstDict = new Object();
 
   // Number of words present inside "words" array.
   var word_count = words.length;
@@ -92,23 +91,30 @@ function findSubstring(s, words) {
   // is more than length of string s itself.
   if (wordsArraySize > s.length) return res;
 
-  for (i = 0; i < word_count; i++) hashMap[words[i]]++;
+  // For each word from the "words" array, this one is copied in the dictionary.
+  // If it's already there, its frequency is increased
+  for (i = 0; i < word_count; i++) {
+    if (firstDict[words[i]] !== undefined) firstDict[words[i]]++;
+    else firstDict[words[i]] = 1;
+  }
 
+  // Using a temporary dictionary (as copy of the first one)
+  // that will deal with each word frequency
   for (i = 0; i <= s.length - wordsArraySize; i++) {
-    tempHashMap = new HashMap(hashMap);
+    var tempDict = { ...firstDict };
 
     (j = i), (count = word_count);
 
-    // Traverse the substring
+    // Traversing the substring
     while (j < i + wordsArraySize) {
-      // Extract the word
+      // Extracting the word
       var word = s.substr(j, word_length);
 
-      // If word not found or if frequency of current word is more than required simply break.
-      if (hashMap.get(word) == '' || temp_hash_map[word] == 0) break;
-      // Otherwise decrement the count of word from hash_map
+      // If "word" is not found or if the frequency of current "word" is more than required, simply break.
+      if (!(word in firstDict) || tempDict[word] == 0) break;
+      // Otherwise decrement the count of "word" from the temporary dictionary
       else {
-        temp_hash_map[word]--;
+        tempDict[word]--;
         count--;
       }
 
@@ -126,3 +132,14 @@ console.log(findSubstring('helloworld', ['world', 'hello']));
 console.log(
   findSubstring('wordgoodgoodgoodbestword', ['word', 'good', 'best', 'good'])
 );
+console.log(findSubstring('helloworld', ['bar', 'foo']));
+console.log(
+  findSubstring('lingmindraboofooowingdingbarrwingmonkeypoundcake', [
+    'fooo',
+    'barr',
+    'wing',
+    'ding',
+    'wing'
+  ])
+);
+console.log(findSubstring('aaaaaaaa', ['aa', 'aa', 'aa']));

@@ -39,12 +39,15 @@ function checkDuplicates(theArray) {
   return result;
 }
 
+// Auxiliary function to return the sum of all values in an array
+const arrSum = arr => arr.reduce((a, b) => a + b, 0);
+
 var findSubstring = (s, words) => {
   res = [];
   wordL = 0;
   countw = 0;
   currW = '';
-  seq = [];
+  seq = new Object();
   startIndex = 0;
 
   // Checking first if both elements are not empty
@@ -66,30 +69,40 @@ var findSubstring = (s, words) => {
           // It is always word by word in this case
           currW = s.substr(i + j * wordL, wordL);
           if (words.includes(currW)) {
-            if (!seq.includes(currW)) {
-              seq.push(currW);
+            if (seq[currW] == undefined) {
+              seq[currW] = 1;
               currW = '';
-            } else if (duplic > 0) {
+            } else if (seq[currW] < rep + 1) {
               // If the are duplicates, then it still counts
-              seq.push(currW);
+              seq[currW]++;
               currW = '';
               // Decreasing so this also stops when it reaches 0.
-              duplic--;
+              // duplic--;
             } else {
-              seq = [];
+              seq = {};
               break;
             }
           } else break; // No matches, we move to the next character
 
           // When the sequence length has the same length has the "words" array, we have
+
           // completed the cycle of words and the sequence match.
-          if (seq.length == words.length) {
+          if (Object.keys(seq).length == words.length) {
             res.push(startIndex); // Store the starting index.
             seq = [];
             break;
+          } else {
+            // Because there might be repetitions, we need to sum the values from the
+            // dictionary
+            var totalWords = arrSum(Object.values(seq)); // Calling the needed function
+            if (totalWords == words.length) {
+              res.push(startIndex); // Store the starting index.
+              seq = [];
+              break;
+            }
           }
         }
-        if (seq.length > 0) seq = []; // Resetting for a new cycle.
+        if (totalWords > 0) seq = {}; // Resetting for a new cycle.
       }
     }
   }
