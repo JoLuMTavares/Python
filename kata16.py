@@ -37,10 +37,16 @@ def get_peak(peak_arr):
 
 # Auxiliary function to determine the peak positions
 def get_peak_pos(original_arr, f_p_list, pos = 0):
+  # Important. The comparison must be always in ascending order
+  f_p_l_c = 0 
   peak_pos_list = []
   for i in range (len(original_arr)):
-    if original_arr[i] in f_p_list:
+    if original_arr[i] == f_p_list[f_p_l_c]:
+      f_p_l_c += 1
       peak_pos_list.append(i)
+      if f_p_l_c == len(f_p_list):
+        break
+
   return peak_pos_list
 
 
@@ -71,20 +77,20 @@ def pick_peaks(arr):
     pos_l.append(pos)
     peaks_l.append(firstPeak)
     subList1 = [arr[i] for i in range(0, pos)]
-    subList2 = [arr[i] for i in range(pos, len(arr))]
+    subList2 = [arr[i] for i in range(pos+1, len(arr))]
     main_peak_list += get_peak(subList1) + get_peak(subList2)
     main_peak_list_pos = get_peak_pos(arr, main_peak_list)
   return {"pos": main_peak_list_pos, "peaks": main_peak_list}
 
 
 
-pick_peaks([1,2,3,6,4,1,2,3,2,1])
-pick_peaks([3,2,3,6,4,1,2,3,2,1,2,3])
-pick_peaks([3,2,3,6,4,1,2,3,2,1,2,2,2,1])
-pick_peaks([2,1,3,1,2,2,2,2,1])
-pick_peaks([2,1,3,1,2,2,2,2])
-pick_peaks([2,1,3,2,2,2,2,5,6])
-pick_peaks([2,1,3,2,2,2,2,1])
-pick_peaks([1,2,5,4,3,2,3,6,4,1,2,3,3,4,5,3,2,1,2,3,5,5,4,3])
-pick_peaks([])
-pick_peaks([1,1,1,1])
+print(pick_peaks([1,2,3,6,4,1,2,3,2,1]))
+print(pick_peaks([3,2,3,6,4,1,2,3,2,1,2,3]))
+print(pick_peaks([3,2,3,6,4,1,2,3,2,1,2,2,2,1]))
+print(pick_peaks([2,1,3,1,2,2,2,2,1]))
+print(pick_peaks([2,1,3,1,2,2,2,2]))
+print(pick_peaks([2,1,3,2,2,2,2,5,6]))
+print(pick_peaks([2,1,3,2,2,2,2,1]))
+print(pick_peaks([1,2,5,4,3,2,3,6,4,1,2,3,3,4,5,3,2,1,2,3,5,5,4,3]))
+print(pick_peaks([]))
+print(pick_peaks([1,1,1,1]))
