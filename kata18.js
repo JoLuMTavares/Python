@@ -14,7 +14,7 @@
  *  */
 
 //  package com.euler;
-
+/*
 class greatestProductClass {
   s =
     '73167176531330624919225119674426574742355349194934' +
@@ -38,7 +38,36 @@ class greatestProductClass {
     '05886116467109405077541002256983155200055935729725' +
     '71636269561882670428252483600823257530420752963450';
 
-  greatestProduct(input) {
-    // todo
-  }
+  // greatestProduct(input) {
+  //   // todo
+  // }
 }
+*/
+
+function greatestProduct(input) {
+  intArray = [];
+  gp = 0;
+  for (i = 0; i < input.length; i++) {
+    console.log(input[i]);
+    if (intArray.length == 5) break;
+    else if (!intArray.includes(parseInt(input[i])))
+      intArray.push(parseInt(input[i]));
+    else {
+      decreas = intArray.length - intArray.lastIndexOf(parseInt(input[i]));
+      i -= decreas;
+      // if (intArray[intArray.length] !== parseInt(input[i])) i--;
+      intArray = [];
+    }
+  }
+  if (intArray.length == 5) {
+    intArray.sort();
+    firstNumStr =
+      String(intArray[3]) + String(intArray[2]) + String(intArray[0]);
+    secondNumStr = String(intArray[4]) + String(intArray[1]);
+    gp = parseInt(firstNumStr) * parseInt(secondNumStr);
+  }
+
+  return gp;
+}
+
+console.log(greatestProduct('123834539327238239583'));
