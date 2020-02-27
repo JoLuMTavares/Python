@@ -30,10 +30,29 @@ Technical Details
 """
 
 def solver(arr,n,q):
-	#your code goes here. the sleeper must awaken!
-	pass
+	realArr = [i for i in arr]
+	realArr.sort()
+	moduls = []
+	targets = []
+	newArr = []
+	halfL = len(arr) // 2
+	newArr.append(realArr[len(realArr)-1])
+	for i in range(1,halfL+1):
+		res = q % realArr[len(realArr)-i]
+		moduls.append(res)
+	for elem in moduls:
+		if elem in realArr:
+			targets.append(elem)
+			realArr.pop(realArr.index(elem))
+	
+	if len(targets) > 0:
+		for elem in targets:
+			newArr.insert(0, elem)
+	print(newArr)
 
+solver((3,5,7,1,6,8,2,4),3,13)
 
+"""
 @test.describe('Example Tests')
 def example_tests():
 	examples = (
@@ -52,3 +71,4 @@ def example_tests():
 	)
 	for i,v in enumerate(examples):
 		test.expect(*check_solution(solver(*v),example_solutions[i],*v))
+		"""
