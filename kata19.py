@@ -29,6 +29,7 @@ Technical Details
 
 """
 
+"""
 def solver(arr,n,q):
 	realArr = [i for i in arr]
 	realArr.sort()
@@ -40,15 +41,60 @@ def solver(arr,n,q):
 	for i in range(1,halfL+1):
 		res = q % realArr[len(realArr)-i]
 		moduls.append(res)
-	for elem in moduls:
-		if elem in realArr:
-			targets.append(elem)
-			realArr.pop(realArr.index(elem))
+	# for elem in moduls:
+	minElem = min(moduls)
+	if minElem in realArr:
+		targets.append(minElem)
+		moduls.pop(minElem)
+		realArr.pop(realArr.index(minElem))
+
+	
 	
 	if len(targets) > 0:
 		for elem in targets:
 			newArr.insert(0, elem)
 	print(newArr)
+"""
+def solver(arr,n, q):
+
+def solverRec(arr,n, len, q):
+	realArr = [i for i in arr]
+	realArr.sort()
+	repeated = []
+	targets = []
+	newArr = []
+	halfL = len(arr) // 2
+	fElem = realArr[len(realArr)-1]
+	targets.append(fElem)
+	count = 1
+	while count < n:
+		for i in reversed(range(0, len(realArr)-2)):
+			cElem = realArr[i]
+			# if count <= n:
+			if (cElem+sum(targets)) <= q and cElem not in repeated:
+				count += 1
+				targets.append(cElem)
+			if len(targets) == n:
+				repeated.clear()
+				break
+		else:
+			count = 1
+			repeated = [targets[i] for i in range(1, len(targets))]
+			targets.clear()
+			targets.append(fElem)
+	print(targets)
+	if len(targets) > 0:
+		newArr = realArr
+		targets.sort()
+		for i in range(0, len(targets)-1):
+			elem = targets[i]
+			newArr.pop(newArr.index(elem))
+			newArr.insert(len(newArr)-1, elem)
+			# newArr.insert(0, realArr[realArr.index(targets[i])])
+	print(newArr)
+
+def solver(arr,n, q):
+	solverRec(arr, n, 0, q)
 
 solver((3,5,7,1,6,8,2,4),3,13)
 
