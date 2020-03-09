@@ -53,7 +53,7 @@ class BTNode:
 
 
   # Getting the current node
-  def getElement(self):
+  def getValue(self):
     return __self.element
 
   # Getting the left child of the node
@@ -66,62 +66,74 @@ class BTNode:
 
 
   # Setting a new node
-  def setElement(self, newElement):
-    __self.element = newElement
+  def setValue(self, newElement):
+    __self.element = BTNode(newElement)
 
   # Setting a new leftChild of the node
   def setLeftChild(self, newLeft):
-    __self.leftChild = newLeft
+    __self.leftChild = BTNode(newLeft)
 
   # Setting a new rightChild of the node
   def setRightChild(self, newRight):
-    __self.rightChild = newRight
+    __self.rightChild = BTNode(newRight)
 
   # This function checks if the node has no children
   def isLeaf(self):
-    return __self.leftChild == None and __self.rightChild == None
+    return self.getLeft() == None and self.getRight() == None
 
   # This function checks if the tree is empty (iff the tree contains no elements)
   def isEmpty(self):
-    return root == None
+    return self.getValue() == None
 
   # This function inserts a new node (either left or right child)
-  def insertNode(self, newNode):
-    node = self.getElement()
-    if node is not None:
-      if newNode < node:
-          if __self.leftChild is None:
-              self.setLeftChild(BTNode(newNode))
-          else:
-              __self.leftChild.insertNode(newNode)
-      elif newNode >= node:
-          if self.rightChild is None:
-              self.setRightChild(BTNode(newNode))
-          else:
-              __self.rightChild.insertNode(BTNode(newNode))
-      else:
-          self.setElement(BTNode(newNode))
+  def insertNode(self, node, newNode):
+    if newNode < node.getValue():
+      leftC = node.getLeft()
+      rightC = node.getRight()
+        if leftC is None:
+            node.setLeftChild(newNode)
+        else:
+            leftC.insertNode(newNode)
+    else:
+        if rightC is None:
+            node.setRightChild(newNode)
+        else:
+            rightC.insertNode(newNode)
+    # else:
+    #     self.setValue(newNode)
 
 
-  def getAllNodes(self, element):
-    element = self.getElement()
-    leftChildren = None
-    rightChildren = None
-    if not element.isLeaf():
-      leftC = element.getLeft()
-      if not leftC.isLeaf():
-        leftChildren = leftC.getAllNodes()
-        rightC = self.getRight()
-        if rightC is not None:
-          if not rightC.isLeaf():
-            rightChildren = rightC.getAllNodes()        
-            return [element, leftChildren, rightChildren]  
-            return [element, leftChildren, rightC]
-          return [element, leftChildren]
-        return[element, leftC]
-      return [element]
+  # def getAllNodes(self, element):
+  #   element = self.getValue()
+  #   leftChildren = None
+  #   rightChildren = None
+  #   if not element.isLeaf():
+  #     leftC = element.getLeft()
+  #     if not leftC.isLeaf():
+  #       leftChildren = leftC.getAllNodes()
+  #       rightC = self.getRight()
+  #       if rightC is not None:
+  #         if not rightC.isLeaf():
+  #           rightChildren = rightC.getAllNodes()        
+  #           return [element, leftChildren, rightChildren]  
+  #           return [element, leftChildren, rightC]
+  #         return [element, leftChildren]
+  #       return[element, leftC]
+  #     return [element]
 
-
+  # This function returns all the nodes from the Complete Binary Tree
+  def getNodes(self, node):
+    BTree = [node]
+    if not node.isLeaf():
+      leftC = node.getLeft()
+      BTree.append(leftC)
+      rightC = node.getRight()
+      if not rightC == None:
+        BTree.append(rightC)
+      BTree.extend(getNodes(leftC))
+      if not rightC == None and not rightC.isLeaf():
+        BTree.extend(getNodes(rightC))
+    return BTree
 
 # This function calls the another to insert all the nodes in the tree
 def insertNodes(node, list):
@@ -129,19 +141,18 @@ def insertNodes(node, list):
     node.insertNode(element)
 
 # This function calls another to get all the nodes of the tree
-def getNodes(node):
-  return node.getAllNodes()
+# def getNodes(node):
+#   return node.getAllNodes()
 
 
 # The main function. It creates a binary tree from a given list.
 # Then returns the result of that binary tree (a new list in Binary Tree order).
-def makeBinaryTree(list):
+def complete_binary_tree(list):
   root = BTNode(list[Math.round(len(list)/2)])
   list.remove(root)
   insertNodes(root, list)
   finalRes = getNodes(root)
-  return finalRes
-
+  return finalRes 
 # Class Binary Tree (extends BTNode)
 
 # class BinaryTree(BTNode):
