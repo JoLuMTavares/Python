@@ -45,36 +45,37 @@ Output 2: The output of the function shall be an array containing the values of 
 
 class BTNode:
 
+
   # Constructor of the binary tree  
-  def __init__(self, theElement, leftNode=None, rightNode=None):
+  def __init__(__self, theElement, leftNode=None, rightNode=None):
     __self.leftChild = leftNode
     __self.rightChild = rightNode
     __self.element = theElement
 
 
   # Getting the current node
-  def getValue(self):
+  def getValue(__self):
     return __self.element
 
   # Getting the left child of the node
-  def getLeft(self):
+  def getLeft(__self):
     return __self.leftChild
 
   # Getting the right child of the node
-  def getRight(self):
+  def getRight(__self):
     return __self.rightChild
 
 
   # Setting a new node
-  def setValue(self, newElement):
+  def setValue(__self, newElement):
     __self.element = BTNode(newElement)
 
   # Setting a new leftChild of the node
-  def setLeftChild(self, newLeft):
+  def setLeftChild(__self, newLeft):
     __self.leftChild = BTNode(newLeft)
 
   # Setting a new rightChild of the node
-  def setRightChild(self, newRight):
+  def setRightChild(__self, newRight):
     __self.rightChild = BTNode(newRight)
 
   # This function checks if the node has no children
@@ -89,16 +90,16 @@ class BTNode:
   def insertNode(self, node, newNodeValue):
     if newNodeValue < node.getValue():
       leftC = node.getLeft()
-        if leftC is None:
-            node.setLeftChild(newNodeValue)
-        else:
-            leftC.insertNode(leftC, newNodeValue)
+      if leftC is None:
+          node.setLeftChild(newNodeValue)
+      else:
+          leftC.insertNode(leftC, newNodeValue)
     else:
-        rightC = node.getRight()
-        if rightC is None:
-            node.setRightChild(newNodeValue)
-        else:
-            rightC.insertNode(rightC, newNodeValue)
+      rightC = node.getRight()
+      if rightC is None:
+          node.setRightChild(newNodeValue)
+      else:
+          rightC.insertNode(rightC, newNodeValue)
 
 
   # This function returns all the nodes from the Complete Binary Tree
@@ -106,34 +107,36 @@ class BTNode:
     BTree = [node.getValue()]
     if not node.isLeaf():
       leftC = node.getLeft()
-      BTree.append(leftC)
+      BTree.append(leftC.getValue())
       rightC = node.getRight()
       if not rightC == None:
-        BTree.append(rightC)
-      BTree.extend(getNodes(leftC))
+        BTree.append(rightC.getValue())
+      BTree.extend(leftC.getNodes(leftC))
       if not rightC == None and not rightC.isLeaf():
-        BTree.extend(getNodes(rightC))
+        BTree.extend(rightC.getNodes(rightC))
     return BTree
 
 # This function calls the another to insert all the nodes in the tree
 def insertNodes(node, list):
   for element in list:
-    node.insertNode(element)
+    node.insertNode(node, element)
 
 
 
 # The main function. It creates a binary tree from a given list.
 # Then returns the result of that binary tree (a new list in Binary Tree order).
 def complete_binary_tree(list):
-  root = BTNode(list[Math.round(len(list)/2)])
-  list.remove(root)
+  root = BTNode(list[round(len(list)/2)])
+  list.remove(root.getValue())
   insertNodes(root, list)
-  finalRes = getNodes(root)
+  finalRes = root.getNodes(root)
   return finalRes 
 
 
 
 # print(makeBinaryTree([1, 2, 2, 6, 7, 5]))
+
+print(complete_binary_tree([1, 2, 2, 6, 7, 5]))
 
 
 
