@@ -47,10 +47,11 @@ class BTNode:
 
 
   # Constructor of the binary tree  
-  def __init__(__self, theElement, leftNode=None, rightNode=None):
+  def __init__(__self, theElement, leftNode=None, rightNode=None, parentNode=None):
     __self.leftChild = leftNode
     __self.rightChild = rightNode
     __self.element = theElement
+    __self.parent = parentNode
 
 
   # Getting the current node
@@ -65,6 +66,10 @@ class BTNode:
   def getRight(__self):
     return __self.rightChild
 
+  # Getting the parent node
+  def getParent(__self):
+    return __self.parent
+
 
   # Setting a new node
   def setValue(__self, newElement):
@@ -72,11 +77,34 @@ class BTNode:
 
   # Setting a new leftChild of the node
   def setLeftChild(__self, newLeft):
+    __self.leftChild = newLeft
+
+  # Setting the leftChild by the given value 
+  def setLeftChildByValue(__self, newLeft):
     __self.leftChild = BTNode(newLeft)
 
   # Setting a new rightChild of the node
   def setRightChild(__self, newRight):
+    __self.leftChild = newRight
+
+  # Setting the rightChild by the given value
+  def setRightChildByValue(__self, newRight):
     __self.rightChild = BTNode(newRight)
+
+  # Setting the parent node
+  def setParent(__self, parentNode):
+    __self.parent = parentNode
+
+
+  # Deleting left Child
+  def delLeftChild(__self):
+    __self.leftChild = None
+
+
+  # Deleting right Child
+  def delRighttChild(__self):
+    __self.rightChild = None
+
 
   # This function checks if the node has no children
   def isLeaf(self):
@@ -103,8 +131,16 @@ class BTNode:
 """
   # New version of the function
   def insertNode(self, node, newNodeValue, height=0):
-    if node.getLeft() is None:
-      node.set
+    if node.isLeaf():
+      node.setLeftChildByValue(newNodeValue)
+    elif node.getRight() is None:
+      node.setRightChildByValue(node.getValue())
+      node.setValue(newNodeValue)
+    else:
+      node.setLeftChild(node)
+      node.setValue(newNodeValue)
+      node.delRighttChild()
+
 
 
   # This function inserts elements as left children of the root
