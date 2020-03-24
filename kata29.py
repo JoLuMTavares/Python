@@ -73,7 +73,7 @@ class BTNode:
 
   # Setting a new node
   def setValue(__self, newElement):
-    __self.element = BTNode(newElement)
+    __self.element = newElement
 
   # Setting a new leftChild of the node
   def setLeftChild(__self, newLeft):
@@ -116,28 +116,31 @@ class BTNode:
 
  
   # New version of the function
-  def insertLeftNode(self, node, newNodeValue, currHeight = 2, totalHeight):
+  def insertLeftNode(self, node, newNodeValue, currHeight , totalHeight):
     if node.isLeaf():
       node.setLeftChild(node)
       node.setValue(newNodeValue)
       currHeight += 1
-      return True
+      return 1
     elif node.getRight() is None:
       node.setRightChildByValue(node.getValue())
       node.setValue(newNodeValue)
-      return True
+      return 0
+    elif (currHeight + 1) == totalHeight:
+      return 2
     else:
-      if (currHeight + 1) == totalHeight:
+      rightC = node.getRight()
+      currHeight += 1
+      insertRes = rightC.insertLeftNode(rightC, newNodeValue, currHeight, totalHeight)
+      if insertRes == 2 and currHeight > 2:
+        currHeight -= 1
+        return insertRes
+      elif insertRes == 2 and currHeight == 2:
         node.setLeftChild(node)
         node.setValue(newNodeValue)
         node.delRightChild()
         currHeight += 1
-        return True
-      else:
-        rightC = node.getRight()
-        currHeight += 1
-        insertRes = rightC.insertLeftNode(rightC, newNodeValue, currHeight, totalHeight)
-        return insertRes
+        return 1
 
 
 
@@ -149,8 +152,8 @@ class BTNode:
       node.setLeftChildByValue(newNodeValue)
       return True
     else:
-      insertionRes = node.insertLeftNode(leftC, newNodeValue, totalHeight)
-      if insertionRes == True:
+      insertionRes = node.insertLeftNode(leftC, newNodeValue, 2, totalHeight)
+      if insertionRes == 1:
         return True
       else:
         return False
