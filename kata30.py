@@ -45,6 +45,12 @@ Output 2: The output of the function shall be an array containing the values of 
 
 class BTNode:
 
+  # Constructor of the binary tree  
+  def __init__(__self, node):
+    __self.leftChild = node.getLeft()
+    __self.rightChild = node.getRight()
+    __self.element = node.getValue()
+    
 
   # Constructor of the binary tree  
   def __init__(__self, theElement, leftNode=None, rightNode=None, parentNode=None):
@@ -85,7 +91,7 @@ class BTNode:
 
   # Setting a new rightChild of the node
   def setRightChild(__self, newRight):
-    __self.leftChild = newRight
+    __self.rightChild = newRight
 
   # Setting the rightChild by the given value
   def setRightChildByValue(__self, newRight):
@@ -102,7 +108,7 @@ class BTNode:
 
 
   # Deleting right Child
-  def delRighttChild(__self):
+  def delRightChild(__self):
     __self.rightChild = None
 
 
@@ -118,15 +124,28 @@ class BTNode:
   # New version of the function
   def insertLeftNode(self, node, newNodeValue, currHeight , totalHeight):
     if node.isLeaf():
-      node.setLeftChild(node)
+      node.setLeftChildByValue(node.getValue())
       node.setValue(newNodeValue)
       currHeight += 1
       return 1
     elif node.getRight() is None:
-      node.setRightChildByValue(node.getValue())
-      node.setValue(newNodeValue)
-      return 0
+      if totalHeight == 3:
+        node.setRightChildByValue(node.getValue())
+        node.setValue(newNodeValue)
+        return 0
+      else:
+        node.setRightChildByValue(newNodeValue)
+        return 0
     elif (currHeight + 1) == totalHeight:
+      if totalHeight == 3:
+        newLeftC = BTNode(node.getValue())
+        newLeftC.setLeftChild(node.getLeft())
+        newLeftC.setRightChild(node.getRight())
+        node.setLeftChild(newLeftC)
+        node.setValue(newNodeValue)
+        node.delRightChild()
+        currHeight += 1
+        return 1  
       return 2
     else:
       rightC = node.getRight()
@@ -136,11 +155,13 @@ class BTNode:
         currHeight -= 1
         return insertRes
       elif insertRes == 2 and currHeight == 2:
-        node.setLeftChild(node)
+        newLeftC = BTNode(node)
+        node.setLeftChild(newLeftC)
         node.setValue(newNodeValue)
         node.delRightChild()
         currHeight += 1
         return 1
+      return 0
 
 
 
@@ -181,13 +202,13 @@ class BTNode:
     return BTree
 
 # This function calls the another to insert all the nodes in the tree
-def insertNodes(midPos, node, list):
+def insertNodes(correctPos, node, list):
   totalHeight = 1
-  for i in range(0, midPos):
+  for i in range(0, correctPos):
     insRes = node.insertLeftChildren(node, list[i], totalHeight)
     if insRes == True:
       totalHeight += 1
-  for j in range(midPos, len(list)):
+  for j in range(correctPos, len(list)):
     node.insertRightChildren(node, list[j], totalHeight)
   # for element in list:
   #   node.insertNode(node, element)
@@ -197,14 +218,14 @@ def insertNodes(midPos, node, list):
 # The main function. It creates a binary tree from a given list.
 # Then returns the result of that binary tree (a new list in Binary Tree order).
 def complete_binary_tree(list):
-  midPos = round(len(list)/2)
-  root = BTNode(list[midPos])
+  rootPos = round(2*len(list)/3) - 1
+  root = BTNode(list[rootPos])
   list.remove(root.getValue())
-  insertNodes(midPos, root, list)
+  insertNodes(rootPos, root, list)
   finalRes = root.getNodes(root)
   return finalRes 
 
-
+# print(complete_binary_tree([1, 2, 2, 6, 7, 5]))
 print(complete_binary_tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
 
 
