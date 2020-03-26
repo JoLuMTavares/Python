@@ -114,7 +114,7 @@ class BTNode:
 
   # This function checks if the node has no children
   def isLeaf(self):
-    return self.getLeft() == None and self.getRight() == None
+    return self.getLeft() == None
 
   # This function checks if the tree is empty (iff the tree contains no elements)
   def isEmpty(self):
@@ -164,7 +164,44 @@ class BTNode:
       return 0
 
   # This function inserts the node on the right children side of the root
-  def insertRightNode(self, node, newNodeValue, currHeight , totalHeight):
+  def insertRightNode(self, node, newNodeValue, currHeight, totalRightHeight):
+    if node.isLeaf():
+      node.setLeftChildByValue(node.getValue())
+      node.setValue(newNodeValue)
+      currHeight += 1
+      return 1
+    elif node.getRight() is None:
+      node.setRightChildByValue(newNodeValue)      
+      currHeight += 1
+      return 0
+    elif node.getLeft().isLeaf():
+      if currHeight == 2:
+        newLeftC = BTNode(node.getValue())
+        newLeftC.setLeftChild(node.getLeft())
+        newLeftC.setRightChild(node.getRight())
+        node.setLeftChild(newLeftC)
+        node.setValue(newNodeValue)
+        node.delRightChild()
+        currHeight += 1
+        return 1
+      return 2
+    else:
+      rightC = node.getRight()
+      currHeight += 1
+      insertRes = rightC.insertRightNode(rightC, newNodeValue, currHeight, totalRightHeight)
+      if insertRes == 2 and currHeight > 2:
+        currHeight -= 1
+        return insertRes
+      elif insertRes == 2 and currHeight == 2:
+        newLeftC = BTNode(node)
+        node.setLeftChild(newLeftC)
+        node.setValue(newNodeValue)
+        node.delRightChild()
+        currHeight += 1
+        return 1
+      return 0
+
+        
 
 
   # This function inserts elements as left children of the root
@@ -181,16 +218,20 @@ class BTNode:
         return False
 
   # This function inserts elements as right children of the root
-  def insertRightChildren(self, node, newNodeValue, totalHeight):
-    rightC = node.getLeft()
+  def insertRightChildren(self, node, newNodeValue, totalRightHeight):
+    rightC = node.getRight()
     if rightC is None:
-      node.setRightChild(newNodeValue)
+      node.setRightChildByValue(newNodeValue)
+      return True
     else:
-      node.insertNode(rightC, newNodeValue, totalHeight)
+      rightInsertion = node.insertRightNode(rightC, newNodeValue, 2, totalRightHeight)
+      if rightInsertion == 1:
+        return True
+      return False
 
   # This function returns all the nodes from the Complete Binary Tree
   def getNodes(self, node):
-    BTree = [node.getValue()]
+    BTree = []
     if not node.isLeaf():
       leftC = node.getLeft()
       BTree.append(leftC.getValue())
@@ -205,14 +246,16 @@ class BTNode:
 # This function calls the another to insert all the nodes in the tree
 def insertNodes(correctPos, node, list):
   totalHeight = 1
+  totalRightHeight = 1
   for i in range(0, correctPos):
     insRes = node.insertLeftChildren(node, list[i], totalHeight)
     if insRes == True:
       totalHeight += 1
   for j in range(correctPos, len(list)):
-    node.insertRightChildren(node, list[j], totalHeight)
-  # for element in list:
-  #   node.insertNode(node, element)
+    rightIns = node.insertRightChildren(node, list[j], totalRightHeight)
+    if rightIns == True:
+      totalRightHeight += 1
+
 
 
 
@@ -223,8 +266,10 @@ def complete_binary_tree(list):
   root = BTNode(list[rootPos])
   list.remove(root.getValue())
   insertNodes(rootPos, root, list)
-  finalRes = root.getNodes(root)
-  return finalRes 
+  BTree = [root.getValue()]
+  BTree.extend(root.getNodes(root))
+  # finalRes = root.getNodes(root)
+  return BTree 
 
 # print(complete_binary_tree([1, 2, 2, 6, 7, 5]))
 print(complete_binary_tree([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
