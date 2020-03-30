@@ -162,9 +162,13 @@ def class BinaryTree(BTNode):
         return 0
       else:
         node.setRightChildByValue(newNodeValue)
-        BTArray.insert((2**(currHeight-2))-1, newNodeValue) # Inserting at the correct position according go the current (not total) height of the tree
+        currHeight += 1
+        BTArray.insert((2**(currHeight-1))-1, newNodeValue) # Inserting at the correct position according go the current (not total) height of the tree
         return 0
     elif (currHeight + 1) == totalHeight:
+      # If the total height is now three, the tree grows and the left child of
+      # the current node is the node it self. The node sets the new given value
+      # as its element now.
       if totalHeight == 3:
         newLeftC = BTNode(node.getValue())
         newLeftC.setLeftChild(node.getLeft())
@@ -173,22 +177,31 @@ def class BinaryTree(BTNode):
         node.setValue(newNodeValue)
         node.delRightChild()
         currHeight += 1
+        BTArray.insert(1, newNodeValue) # Insertion on position one
         return 1  
+      # If the height of the tree is greater than 3, then no insertion can be 
+      # can be made, since we reach the bottom of the tree.  
       return 2
     else:
       rightC = node.getRight()
       currHeight += 1
+      # Here we use the recursivity
       insertRes = rightC.insertLeftNode(rightC, newNodeValue, currHeight, totalHeight)
+      # If it wasn't possible any insertion, we go up
       if insertRes == 2 and currHeight > 2:
         currHeight -= 1
         return insertRes
       elif insertRes == 2 and currHeight == 2:
+        # If no insertion was made and we came back to the position where
+        # current height is two (left child of the root), the tree grows then.
         newLeftC = BTNode(node)
         node.setLeftChild(newLeftC)
         node.setValue(newNodeValue)
         node.delRightChild()
         currHeight += 1
+        BTArray.insert(1, newNodeValue) # Insertion on position one
         return 1
+      # If everything fails, we return 0
       return 0
 
   # This function inserts the node on the right children side of the root
