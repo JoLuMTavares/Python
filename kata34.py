@@ -56,7 +56,7 @@ class BTNode:
   def __init__(__self, theElementValue, leftNode=None, rightNode=None, parentNode=None):
     __self.leftChild = leftNode
     __self.rightChild = rightNode
-    __self.elementValue = theValueValue
+    __self.elementValue = theElementValue
     __self.parent = parentNode
 
 
@@ -120,7 +120,7 @@ class BTNode:
   
 
 # Class Binary Tree (extends class BTNode)
-def class BinaryTree(BTNode):
+class BinaryTree(BTNode):
 
   # The root of the tree
   root = None
@@ -130,8 +130,8 @@ def class BinaryTree(BTNode):
 
   # Constructor
   def __init__(self, rootValue):
-    root = BTNode(rootValue)
-    BTArray.append(rootValue)
+    self.root = BTNode(rootValue)
+    self.BTArray.append(rootValue)
 
   # This function checks if the tree is empty (iff the tree contains no elements)
   def isEmpty(self):
@@ -144,10 +144,11 @@ def class BinaryTree(BTNode):
     # When the node is a leaf, a new child is created with the value of
     # the current node and the node stores then the new given value
     if node.isLeaf():
+      listPos = self.BTArray.index(node.getValue()) # Position where to store the new value
       node.setLeftChildByValue(node.getValue())
-      BTArray.append(node.getValue()) # New value at the end of the array
+      self.BTArray.append(node.getValue()) # New value at the end of the array
       node.setValue(newNodeValue) # New value for the current node
-      BTArray[BTArray.index(node.getValue())] = newNodeValue # The first value stored is changed to the new given one
+      self.BTArray[listPos] = newNodeValue # The first value stored is changed to the new given one
       currHeight += 1
       return 1
     # For the right child, is the same procedure as the left child  
@@ -156,14 +157,14 @@ def class BinaryTree(BTNode):
       # store the new given value as the right child and there's no switch
       if totalHeight == 3:
         node.setRightChildByValue(node.getValue())
-        BTArray.append(node.getValue()) # New value at the end of the array
+        self.BTArray.append(node.getValue()) # New value at the end of the array
         node.setValue(newNodeValue) # New value for the current node
-        BTArray[1] = newNodeValue # The current value of the node is also updated in the array
+        self.BTArray[1] = newNodeValue # The current value of the node is also updated in the array
         return 0
       else:
         node.setRightChildByValue(newNodeValue)
         currHeight += 1
-        BTArray.insert((2**(currHeight-1))-1, newNodeValue) # Inserting at the correct position according go the current (not total) height of the tree
+        self.BTArray.insert((2**(currHeight-1))-1, newNodeValue) # Inserting at the correct position according go the current (not total) height of the tree
         return 0
     elif (currHeight + 1) == totalHeight:
       # If the total height is now three, the tree grows and the left child of
@@ -177,7 +178,7 @@ def class BinaryTree(BTNode):
         node.setValue(newNodeValue)
         node.delRightChild()
         currHeight += 1
-        BTArray.insert(1, newNodeValue) # Insertion on position one
+        self.BTArray.insert(1, newNodeValue) # Insertion on position one
         return 1  
       # If the height of the tree is greater than 3, then no insertion can be 
       # can be made, since we reach the bottom of the tree.  
@@ -186,7 +187,7 @@ def class BinaryTree(BTNode):
       rightC = node.getRight()
       currHeight += 1
       # Here we use the recursivity
-      insertRes = rightC.insertLeftNode(rightC, newNodeValue, currHeight, totalHeight)
+      insertRes = self.insertLeftNode(rightC, newNodeValue, currHeight, totalHeight)
       # If it wasn't possible any insertion, we go up
       if insertRes == 2 and currHeight > 2:
         currHeight -= 1
@@ -199,9 +200,9 @@ def class BinaryTree(BTNode):
         node.setValue(newNodeValue)
         node.delRightChild()
         currHeight += 1
-        BTArray.insert(1, newNodeValue) # Insertion on position one
+        self.BTArray.insert(1, newNodeValue) # Insertion on position one
         return 1
-      # If everything fails, we return 0
+      # We return 0 in the end because the height of the tree doesn't increase
       return 0
 
   # This function inserts the node on the right children side of the root
@@ -250,10 +251,10 @@ def class BinaryTree(BTNode):
     leftC = node.getLeft()
     if leftC is None:
       node.setLeftChildByValue(newNodeValue)
-      BTArray.append(leftC.getValue())
+      self.BTArray.append(newNodeValue)
       return True
     else:
-      insertionRes = node.insertLeftNode(leftC, newNodeValue, 2, totalHeight)
+      insertionRes = self.insertLeftNode(leftC, newNodeValue, 2, totalHeight)
       if insertionRes == 1:
         return True
       else:
@@ -263,45 +264,45 @@ def class BinaryTree(BTNode):
   def insertRightChildren(self, node, newNodeValue, totalRightHeight):
     rightC = node.getRight()
     if rightC is None:
-      node.setRightChildByValue(newNodeValue)
-      BTArray.append(rightC.getValue())
+      rightC.setRightChildByValue(newNodeValue)
+      self.BTArray.append(rightC.getValue())
       return True
     else:
-      rightInsertion = node.insertRightNode(rightC, newNodeValue, 2, totalRightHeight)
+      rightInsertion = insertRightNode(rightC, newNodeValue, 2, totalRightHeight)
       if rightInsertion == 1:
         return True
       return False
 
   # This function returns all the nodes from the Complete Binary Tree
-  def getNodes(self, node):
-    BTArray = []
-    if not node.isLeaf():
-      leftC = node.getLeft()
-      BTArray.append(leftC.getValue())
-      rightC = node.getRight()
-      if not rightC == None:
-        BTArray.append(rightC.getValue())
-      BTArray.extend(leftC.getNodes(leftC))
-      if not rightC == None and not rightC.isLeaf():
-        BTArray.extend(rightC.getNodes(rightC))
-    return BTArray
+  # def getNodes(self, node):
+  #   BTArray = []
+  #   if not node.isLeaf():
+  #     leftC = node.getLeft()
+  #     BTArray.append(leftC.getValue())
+  #     rightC = node.getRight()
+  #     if not rightC == None:
+  #       BTArray.append(rightC.getValue())
+  #     BTArray.extend(leftC.getNodes(leftC))
+  #     if not rightC == None and not rightC.isLeaf():
+  #       BTArray.extend(rightC.getNodes(rightC))
+  #   return BTArray
 
-# This function calls the another to insert all the nodes in the tree
-def insertNodes(correctPos, list):
-  totalHeight = 1
-  totalRightHeight = 1
-  for i in range(0, correctPos):
-    insRes = root.insertLeftChildren(root, list[i], totalHeight)
-    if insRes == True:
-      totalHeight += 1
-  for j in range(correctPos, len(list)):
-    rightIns = root.insertRightChildren(root, list[j], totalRightHeight)
-    if rightIns == True:
-      totalRightHeight += 1
+  # This function calls the another to insert all the nodes in the tree
+  def insertNodes(self, correctPos, list):
+    totalHeight = 1
+    totalRightHeight = 1
+    for i in range(0, correctPos):
+      insRes = self.insertLeftChildren(self.root, list[i], totalHeight)
+      if insRes == True:
+        totalHeight += 1
+    for j in range(correctPos, len(list)):
+      rightIns = self.insertRightChildren(self.root, list[j], totalRightHeight)
+      if rightIns == True:
+        totalRightHeight += 1
 
-# This function returns the array with the values of all the inserted nodes
-def getNodeValuesArray(self):
-  return BTArray
+  # This function returns the array with the values of all the inserted nodes
+  def getNodeValuesArray(self):
+    return self.BTArray
 
 
 # The main function. It creates a binary tree from a given list.
@@ -311,7 +312,7 @@ def complete_binary_tree(list):
   rootValue = list[rootPos]
   list.remove(rootValue)
   # insertNodes(rootPos, root, list)
-  BTArray = [rootValue]
+  # BTArray = [rootValue]
   BTree = BinaryTree(rootValue)
   BTree.insertNodes(rootPos, list)
   # BTArray.extend(root.getNodes(root))
